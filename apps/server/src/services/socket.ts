@@ -2,20 +2,17 @@ import { Server } from "socket.io";
 import Redis from "ioredis";
 import prismaClient from "./prisma";
 import { produceMessage } from "./kafka";
+require('dotenv').config();
 
-const pub = new Redis({
-  host: "",
-  port: 0,
-  username: "default",
-  password: "",
-});
-
-const sub = new Redis({
-  host: "",
-  port: 0,
-  username: "",
-  password: "",
-});
+var RedisConfig: any =
+{
+  host: process.env.RHOST,
+  port: process.env.RPORT,
+  username: process.env.RUSER,
+  password: process.env.RPASSWORD,
+}
+const pub = new Redis(RedisConfig);
+const sub = new Redis(RedisConfig);
 
 class SocketService {
   private _io: Server;

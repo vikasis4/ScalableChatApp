@@ -2,17 +2,21 @@ import { Kafka, Producer } from "kafkajs";
 import fs from "fs";
 import path from "path";
 import prismaClient from "./prisma";
+require('dotenv').config()
+
+var brokers: any = [process.env.KBROKER];
+var sasl: any = {
+  username: process.env.KUSER,
+  password: process.env.KPASSWORD,
+  mechanism: "plain",
+}
 
 const kafka = new Kafka({
-  brokers: [""],
+  brokers,
   ssl: {
     ca: [fs.readFileSync(path.resolve("./ca.pem"), "utf-8")],
   },
-  sasl: {
-    username: "",
-    password: "",
-    mechanism: "",
-  },
+  sasl,
 });
 
 let producer: null | Producer = null;
