@@ -53,7 +53,9 @@ export async function startMessageConsumer() {
       try {
         await prismaClient.message.create({
           data: {
-            text: message.value?.toString(),
+            message: message.value?.toString(),
+            userId:'',
+            roomId:'cece'
           },
         });
       } catch (err) {

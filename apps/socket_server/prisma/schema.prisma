@@ -12,7 +12,7 @@ model User {
   email    String   @unique
   key      String
   username String?
-  tokens   String[]
+  token   String
   room     Room[]
 
   @@map("user")
