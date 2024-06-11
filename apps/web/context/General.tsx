@@ -7,7 +7,9 @@ interface GeneralProviderProp {
 
 interface ISocketContext {
   data: any,
-  setData: React.Dispatch<React.SetStateAction<{ name: string; email: string; isAuthenticated: boolean; room:any }>>
+  room: any,
+  setRoom: React.Dispatch<React.SetStateAction<{ currentRoomId: string, isPopUpSelected: boolean }>>
+  setData: React.Dispatch<React.SetStateAction<{id:string, name: string; email: string; isAuthenticated: boolean; room: any }>>
 }
 
 const GeneralContext = React.createContext<ISocketContext | null>(null);
@@ -22,21 +24,28 @@ export const useGeneral = () => {
 export const GeneralProvider: React.FC<GeneralProviderProp> = ({ children }) => {
 
   const [data, setData] = useState({
+    id:'',
     name: '',
     email: '',
-    room:[],
-    isAuthenticated: true
+    room: [],
+    isAuthenticated: false
+  });
+
+  const [room, setRoom] = useState({
+    currentRoomId: '',
+    isPopUpSelected: false,
   })
 
   useEffect(() => {
     var token = localStorage.getItem('token');
     async function run() {
       var res = await fetch('http://localhost:8001/auth/verifyToken/' + token);
-      var result = await res.json()
+      var result = await res.json()      
       if (result.status === 'true') {
         setData({
+          id:result.user.id,
           email: result.user.email,
-          name: result.user.name,
+          name: result.user.username,
           isAuthenticated: true,
           room: result.user.room
         })
@@ -47,7 +56,7 @@ export const GeneralProvider: React.FC<GeneralProviderProp> = ({ children }) => 
 
 
   return (
-    <GeneralContext.Provider value={{ data, setData }}>
+    <GeneralContext.Provider value={{ data, setData, room, setRoom }}>
       {children}
     </GeneralContext.Provider>
   );

@@ -24,26 +24,24 @@ const run3 = async () => {
     console.log(user);
 }
 const run2 = async () => {
-    var user = await prismaClient.message.findMany({
-        where: {
-            // roomId: '
-        },
-    });
-    var user2 = await prismaClient.room.findMany({
-        where: {
-            // roomId: '
-        },
-    });
+    // var user = await prismaClient.message.findMany({
+    //     where: {
+    //         // roomId: '
+    //     },
+    // });
+    // var user2 = await prismaClient.room.findMany({
+    //     where: {
+    //         // roomId: '
+    //     },
+    // });
     var user3 = await prismaClient.user.findMany({
-        where: {
-            // roomId: '
-        },
+        where: {}
     });
-    console.log(user);
-    console.log(user2);
+    // console.log(user);
+    // console.log(user2);
     console.log(user3);
 }
 
 // run()
-// run2()  
+run2()  
 // run3()  

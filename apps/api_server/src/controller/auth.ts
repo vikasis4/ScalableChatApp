@@ -5,7 +5,7 @@ const HandleAuth = async (req: any, res: any) => {
     try {
 
         const { email, key, username } = req.body;
-        var user = await prismaClient.user.findUnique({
+        var user: any = await prismaClient.user.findUnique({
             where: {
                 email
             },
@@ -13,10 +13,10 @@ const HandleAuth = async (req: any, res: any) => {
                 room: true
             }
         })
-        var token = user ? await createJWT(email, user.id, username) : null;
+
+        var token = user ? await createJWT(email, user.id, username) : await createJWT(email, "user.id", username);
 
         if (user) {
-            if (user.key === key) {
                 await prismaClient.user.update({
                     where: {
                         email
@@ -27,9 +27,6 @@ const HandleAuth = async (req: any, res: any) => {
                 })
                 res.json({ status: 'true', data: { token, user } })
                 return
-            }
-            res.json({ status: 'no-auth' })
-            return
         }
 
         var new_user = await prismaClient.user.create({
@@ -43,6 +40,7 @@ const HandleAuth = async (req: any, res: any) => {
                 room: true
             }
         })
+        console.log('lolololololo', new_user);
 
         res.json({ status: 'true', data: { token, user: new_user } })
         return
@@ -85,4 +83,21 @@ const verifyToken = async (req: any, res: any) => {
     }
 }
 
-export { HandleAuth, verifyToken }
+const getUser = async (req: any, res: any) => {
+    try {
+        var user = await prismaClient.user.findUnique({
+            where: {
+                email: req.params.email
+            }
+        })
+        if (user) {
+            res.json({ status: 'true', user });
+            return
+        }
+        res.json({ status: 'false' })
+    } catch (error) {
+        console.log(error);
+        res.json({ status: 'error' })
+    }
+}
+export { HandleAuth, verifyToken, getUser }

@@ -2,7 +2,7 @@ var jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 const createJWT = async (email: string, id: string, name:string) => {
-    return await jwt.sign({ email, id, name }, process.env.JWT_SECRET, { algorithm: 'RS256' });
+    return await jwt.sign({ email, id, name }, process.env.JWT_SECRET);
 }
 const verifyJWT = async (token: string) => {
     try {
