@@ -1,8 +1,8 @@
-import { CreateRoom } from "../controller/room"
-
 const express = require('express')
 const router = express.Router()
 
+import { CreateRoom } from "../controller/room"
+
 router.route('/create').post(CreateRoom)
 
-export default router
+module.exports = router
