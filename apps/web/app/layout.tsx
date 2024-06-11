@@ -1,7 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { SocketProvider } from "../context/SocketProvider";
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GeneralProvider } from "../context/General";
 
 export const metadata: Metadata = {
   title: "Create Turborepo",
@@ -16,7 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SocketProvider>
-        <body>{children}</body>
+        <GeneralProvider>
+          <GoogleOAuthProvider clientId="661486035973-r3s2flbuvkmmkjcs8gn54f45kad2oge3.apps.googleusercontent.com">
+            <body>{children}</body>
+          </GoogleOAuthProvider>
+        </GeneralProvider>
       </SocketProvider>
     </html>
   );
