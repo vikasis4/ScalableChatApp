@@ -1,6 +1,5 @@
 import { Server } from "socket.io";
 import Redis from "ioredis";
-import prismaClient from "./prisma";
 import { produceMessage } from "./kafka";
 require('dotenv').config();
 
@@ -30,23 +29,20 @@ class SocketService {
 
   public initListeners() {
     const io = this.io;
-    console.log("Init Socket Listeners...");
 
     io.on("connect", (socket) => {
-      console.log(`New Socket Connected`, socket.id);
-      socket.on("event:message", async ({ message }: { message: string }) => {
-        console.log("New Message Rec.", message);
-        // publish this message to redis
-        await pub.publish("MESSAGES", JSON.stringify({ message }));
+      socket.on("event:joinRoom", async ({ roomIds }: { roomIds: string[] }) => {
+        socket.join(roomIds)
+      });
+      socket.on("event:message", async ({ message, userId, roomId }: { message: string, userId: string, roomId: string }) => {
+        await pub.publish("MESSAGES", JSON.stringify({ message, userId, roomId }));
       });
     });
 
     sub.on("message", async (channel, message) => {
       if (channel === "MESSAGES") {
-        console.log("new message from redis", message);
-        io.emit("message", message);
+        io.to(JSON.parse(message).roomId).emit("message", message);
         await produceMessage(message);
-        console.log("Message Produced to Kafka Broker");
       }
     });
   }

@@ -13,9 +13,7 @@ var sasl: any = {
 
 const kafka = new Kafka({
   brokers,
-  ssl: {
-    ca: [fs.readFileSync(path.resolve("./ca.pem"), "utf-8")],
-  },
+  ssl: { ca: [fs.readFileSync(path.resolve("./ca.pem"), "utf-8")] },
   sasl,
 });
 
@@ -48,14 +46,15 @@ export async function startMessageConsumer() {
   await consumer.run({
     autoCommit: true,
     eachMessage: async ({ message, pause }) => {
+
       if (!message.value) return;
       console.log(`New Message Recv..`);
       try {
         await prismaClient.message.create({
           data: {
-            message: message.value?.toString(),
-            userId:'',
-            roomId:'cece'
+            message: JSON.parse(message.value?.toString()).message,
+            userId: JSON.parse(message.value?.toString()).userId,
+            roomId: JSON.parse(message.value?.toString()).roomId
           },
         });
       } catch (err) {
