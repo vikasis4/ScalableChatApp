@@ -1,13 +1,14 @@
 'use client'
 import React from 'react'
 import { useGeneral } from '../context/General'
+import validRoomRequest from '../utils/vaildRoomRequest';
 
 function AddUser() {
 
     const general = useGeneral();
 
     return (
-        <div className='shadow-md mb-4 h-12 w-full flex px-4 justify-between items-center'>
+        <div className='shadow-md h-12 w-full flex px-4 justify-between items-center'>
             <h1>{general.data.name}</h1>
             <h1 onClick={() => general.setRoom(prev => ({ ...prev, isPopUpSelected: true }))} className='bg-blue-400 text-white px-2 rounded-sm shadow-md hover:cursor-pointer'>+ Add User</h1>
         </div>
@@ -27,7 +28,15 @@ export function AddUserQuery() {
     const handleChange = (e: any) => { setText(e.target.value) }
 
     const handleClick = async () => {
-        var res = await fetch('http://localhost:8001/auth/finduser' + text);
+
+        var verify = validRoomRequest(general.data.room, text);
+
+        if (verify) {
+            alert('User Already exsists in Chat');
+            return
+        }
+
+        var res = await fetch('http://localhost:8001/auth/finduser/' + text);
         var result = await res.json();
         if (result.status === 'true') {
             setUser({
@@ -74,7 +83,7 @@ export function AddUserQuery() {
                     <div className='flex justify-start items-start gap-2 flex-col  text-xs bg-white p-2 rounded-md mt-12 shadow-md'>
                         <h1>Email :- {user.email}</h1>
                         <h1>Username :- {user.name}</h1>
-                        <h1 onClick={handleRoomClick} className='text-center bg-red-400 text-white px-2 rounded-sm shadow-md hover:cursor-pointer w-1/3'>Start Chat</h1>
+                        <h1 onClick={handleRoomClick} className='text-center py-1 bg-green-700 text-white px-2 rounded-sm shadow-md hover:cursor-pointer w-1/3'>Start Chat</h1>
                     </div>
                     :
                     null

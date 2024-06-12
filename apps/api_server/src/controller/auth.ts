@@ -17,16 +17,16 @@ const HandleAuth = async (req: any, res: any) => {
         var token = user ? await createJWT(email, user.id, username) : await createJWT(email, "user.id", username);
 
         if (user) {
-                await prismaClient.user.update({
-                    where: {
-                        email
-                    },
-                    data: {
-                        token
-                    }
-                })
-                res.json({ status: 'true', data: { token, user } })
-                return
+            await prismaClient.user.update({
+                where: {
+                    email
+                },
+                data: {
+                    token
+                }
+            })
+            res.json({ status: 'true', data: { token, user } })
+            return
         }
 
         var new_user = await prismaClient.user.create({
@@ -40,7 +40,6 @@ const HandleAuth = async (req: any, res: any) => {
                 room: true
             }
         })
-        console.log('lolololololo', new_user);
 
         res.json({ status: 'true', data: { token, user: new_user } })
         return
@@ -70,7 +69,11 @@ const verifyToken = async (req: any, res: any) => {
                     id: user.id
                 },
                 include: {
-                    room: true
+                    room: {
+                        include: {
+                            users: true
+                        }
+                    }
                 }
             })
             res.json({ status: 'true', user: new_user });
@@ -100,4 +103,20 @@ const getUser = async (req: any, res: any) => {
         res.json({ status: 'error' })
     }
 }
-export { HandleAuth, verifyToken, getUser }
+
+const info = async (req: any, res: any) => {
+    // var data = await prismaClient.user.findMany({
+    //     where: {}
+    // })
+    var data = await prismaClient.room.findMany({
+        where: {},
+        include: {
+            users: true
+        }
+    })
+    // var data = await prismaClient.message.findMany({
+    //     where: {}
+    // })
+    res.json(data)
+}
+export { HandleAuth, verifyToken, getUser, info }

@@ -32,7 +32,7 @@ export const GeneralProvider: React.FC<GeneralProviderProp> = ({ children }) => 
   });
 
   const [room, setRoom] = useState({
-    currentRoomId: '',
+    currentRoomId: 'null',
     isPopUpSelected: false,
   })
 
@@ -40,7 +40,8 @@ export const GeneralProvider: React.FC<GeneralProviderProp> = ({ children }) => 
     var token = localStorage.getItem('token');
     async function run() {
       var res = await fetch('http://localhost:8001/auth/verifyToken/' + token);
-      var result = await res.json()      
+      var result = await res.json()
+            
       if (result.status === 'true') {
         setData({
           id:result.user.id,
