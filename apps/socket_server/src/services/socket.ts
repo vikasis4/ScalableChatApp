@@ -12,7 +12,7 @@ var RedisConfig: any =
 }
 const pub = new Redis(RedisConfig);
 const sub = new Redis(RedisConfig);
-
+  
 class SocketService {
   private _io: Server;
 
@@ -32,6 +32,8 @@ class SocketService {
 
     io.on("connect", (socket) => {
       socket.on("event:joinRoom", async ({ roomIds }: { roomIds: string[] }) => {
+        console.log(roomIds);
+
         socket.join(roomIds)
       });
       socket.on("event:message", async ({ message, userId, roomId }: { message: string, userId: string, roomId: string }) => {
@@ -40,8 +42,10 @@ class SocketService {
     });
 
     sub.on("message", async (channel, message) => {
+      
       if (channel === "MESSAGES") {
-        io.to(JSON.parse(message).roomId).emit("message", message);
+        var roomId = await JSON.parse(message).roomId;
+        io.to(roomId).emit('message', message);
         await produceMessage(message);
       }
     });

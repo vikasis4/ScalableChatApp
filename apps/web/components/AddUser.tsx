@@ -10,7 +10,11 @@ function AddUser() {
     return (
         <div className='shadow-md h-12 w-full flex px-4 justify-between items-center'>
             <h1>{general.data.name}</h1>
+            <div className='flex gap-2'>
+
             <h1 onClick={() => general.setRoom(prev => ({ ...prev, isPopUpSelected: true }))} className='bg-blue-400 text-white px-2 rounded-sm shadow-md hover:cursor-pointer'>+ Add User</h1>
+            <h1 onClick={() => { localStorage.removeItem('token'); location.reload() }} className='bg-red-400 text-white px-2 rounded-sm shadow-md hover:cursor-pointer'>Log Out</h1>
+            </div>
         </div>
     )
 }
@@ -25,6 +29,8 @@ export function AddUserQuery() {
         name: '',
         userId: ''
     });
+
+    
     const handleChange = (e: any) => { setText(e.target.value) }
 
     const handleClick = async () => {

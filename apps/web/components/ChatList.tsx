@@ -9,8 +9,8 @@ function ChatList() {
   return (
     <div className='py-8 px-4'>
       {
-        general.data.room.map((data: any) => {
-          return <ChatComp key={data.id} data={data} general={general} />
+        general.data.room.map((data: any) => {          
+          return <ChatComp key={data.roomId} data={data} general={general} />
         })
       }
     </div>

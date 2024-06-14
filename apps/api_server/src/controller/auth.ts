@@ -108,15 +108,15 @@ const info = async (req: any, res: any) => {
     // var data = await prismaClient.user.findMany({
     //     where: {}
     // })
-    var data = await prismaClient.room.findMany({
-        where: {},
-        include: {
-            users: true
-        }
-    })
-    // var data = await prismaClient.message.findMany({
-    //     where: {}
+    // var data = await prismaClient.room.findMany({
+    //     where: {},
+    //     include: {
+    //         users: true
+    //     }
     // })
+    var data = await prismaClient.message.findMany({
+        where: {}
+    })
     res.json(data)
 }
 export { HandleAuth, verifyToken, getUser, info }

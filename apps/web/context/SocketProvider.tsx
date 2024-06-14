@@ -7,8 +7,11 @@ interface SocketProviderProps {
 }
 
 interface ISocketContext {
-  sendMessage: (msg: string) => any;
+  sendMessage: (msg: string, roomId: string, userId: string) => any;
+  joinRoom: (roomIds: string[]) => any;
   messages: string[];
+  socket: any,
+  setMessages: React.Dispatch<React.SetStateAction<string[]>>
 }
 
 const SocketContext = React.createContext<ISocketContext | null>(null);
@@ -22,22 +25,30 @@ export const useSocket = () => {
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket>();
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
+
 
   const sendMessage: ISocketContext["sendMessage"] = useCallback(
-    (msg) => {
-      console.log("Send Message", msg);
+    (msg, roomId, userId) => {
       if (socket) {
-        socket.emit("event:message", { message: msg, roomId:'3d3d3', userId:'90j09e' });
+        console.log("Send Message", msg);
+        socket.emit("event:message", { message: msg, roomId, userId });
       }
-    },
-    [socket]
-  );
+    }, [socket]);
+
+  const joinRoom: any = useCallback(
+    (roomIds: string[]) => {
+      if (socket) {
+        console.log("Joining Rooms ", roomIds);
+        socket.emit("event:joinRoom", { roomIds });
+      }
+    }, [socket]);
 
   const onMessageRec = useCallback((msg: string) => {
     console.log("From Server Msg Rec", msg);
-    const { message } = JSON.parse(msg) as { message: string };
-    setMessages((prev) => [...prev, message]);
+    const { message, userId, roomId } = JSON.parse(msg);
+    // setMessages((prev) => [...prev, {message, userId, roomId}]);
+    setMessages([{message, userId, roomId, id:JSON.stringify(Math.random()*1000000)}]);
   }, []);
 
   useEffect(() => {
@@ -54,7 +65,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ sendMessage, messages }}>
+    <SocketContext.Provider value={{ sendMessage, messages, setMessages, joinRoom, socket }}>
       {children}
     </SocketContext.Provider>
   );

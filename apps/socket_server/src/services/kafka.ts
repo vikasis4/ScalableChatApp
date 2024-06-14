@@ -4,17 +4,9 @@ import path from "path";
 import prismaClient from "./prisma";
 require('dotenv').config()
 
-var brokers: any = [process.env.KBROKER];
-var sasl: any = {
-  username: process.env.KUSER,
-  password: process.env.KPASSWORD,
-  mechanism: "plain",
-}
 
 const kafka = new Kafka({
-  brokers,
-  ssl: { ca: [fs.readFileSync(path.resolve("./ca.pem"), "utf-8")] },
-  sasl,
+  brokers:['localhost:9092'] 
 });
 
 let producer: null | Producer = null;
@@ -32,7 +24,7 @@ export async function produceMessage(message: string) {
   const producer = await createProducer();
   await producer.send({
     messages: [{ key: `message-${Date.now()}`, value: message }],
-    topic: "MESSAGES",
+    topic: "MESSAGE",
   });
   return true;
 }
@@ -41,7 +33,7 @@ export async function startMessageConsumer() {
   console.log("Consumer is running..");
   const consumer = kafka.consumer({ groupId: "default" });
   await consumer.connect();
-  await consumer.subscribe({ topic: "MESSAGES", fromBeginning: true });
+  await consumer.subscribe({ topic: "MESSAGE", fromBeginning: true });
 
   await consumer.run({
     autoCommit: true,
@@ -61,7 +53,7 @@ export async function startMessageConsumer() {
         console.log("Something is wrong");
         pause();
         setTimeout(() => {
-          consumer.resume([{ topic: "MESSAGES" }]);
+          consumer.resume([{ topic: "MESSAGE" }]);
         }, 60 * 1000);
       }
     },

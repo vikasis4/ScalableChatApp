@@ -4,6 +4,7 @@ import { useGeneral } from '../../context/General'
 import { useRouter } from 'next/navigation';
 import AddUser, { AddUserQuery } from '../../components/AddUser';
 import ChatList from '../../components/ChatList';
+import MessageList from '../../components/MessageList';
 
 function page() {
 
@@ -31,7 +32,7 @@ function page() {
             </div>
         }
         <div className=' bg-white h-full w-full rounded-md'>
-
+          <MessageList />
         </div>
       </div>
     </div>
