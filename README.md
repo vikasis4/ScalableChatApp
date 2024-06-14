@@ -2,7 +2,7 @@
 
 This is an official starter Turborepo.
 
-![alt text](https://drive.google.com/file/d/1JMG_vjhzAnI1OxdRoWpu8XnPy83CGe2J/view?usp=sharing)
+![alt text](https://lh3.googleusercontent.com/drive-viewer/AKGpihZLZkXGL5GZFk-WY-f7wo0BvhyNTDVFKKmz1zCZ5lLwEBcibV_omMSQg1KCVuNFo8q8Mkp0agF2K4yamlWZWfFlvrhV_wOYLUE=s1600-rw-v1)
 ## Using this example
 
 Run the following command:
