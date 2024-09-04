@@ -2,7 +2,7 @@
 
 This is an overview of our application that how our technologies work to build the scalable chat application which can handle huge volumes of users concurrently.
 
-![alt text](https://api.vecna.online/host/chatdesign.jpeg)
+![alt text](https://api.vecna.online/host/chatdesign.png)
 ## Set Up this project
 
 You have to setup kafka, postgres and redis either locally or shoud use some online service provider like aiven etc. 
